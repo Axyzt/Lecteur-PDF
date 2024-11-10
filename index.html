@@ -1,0 +1,101 @@
+<!--Created by Arizaki | Style & revision by Axyzt-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibliothèque de PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Bibliothèque de PDF</h2>
+            <div id="catalog">
+            </div>
+        </aside>
+        <main class="content">
+            <h2>Lecteur PDF</h2>
+            <embed id="pdf-viewer" type="application/pdf" width="1000" height="800" />
+            
+            <div id="download-container">
+                <a id="download-btn" href="#" download>
+                    <button>Télécharger le PDF</button>
+                </a>
+                <button id="fullscreen-btn">Plein écran</button>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const pdfItems = [
+            {
+                file: 'pdf1.pdf',
+                cover: 'images/test.jpg',
+                title: 'Titre du Manga 1',
+                tags: ['NSFW']
+            },
+            {
+                file: 'pdf2.pdf',
+                cover: 'covers/cover2.jpg',
+                title: 'Titre du Manga 2',
+                tags: ['Tous publics']
+            }
+        ];
+
+        const catalog = document.getElementById('catalog');
+        const pdfViewer = document.getElementById('pdf-viewer');
+        const downloadBtn = document.getElementById('download-btn');
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+
+        pdfItems.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'catalog-item';
+            
+            const img = document.createElement('img');
+            img.src = item.cover;
+            img.alt = item.title;
+            
+            const title = document.createElement('h3');
+            title.textContent = item.title;
+            
+            const tags = document.createElement('p');
+            tags.className = 'tags';
+            tags.textContent = item.tags.join(', ');
+
+            div.appendChild(img);
+            div.appendChild(title);
+            div.appendChild(tags);
+
+            div.addEventListener('click', () => {
+                const pdfPath = `page/${item.file}`;
+                pdfViewer.src = pdfPath;
+
+                downloadBtn.href = pdfPath;
+                downloadBtn.download = item.file;
+            });
+
+            catalog.appendChild(div);
+        });
+
+        if (pdfItems.length > 0) {
+            const firstPdf = `page/${pdfItems[0].file}`;
+            pdfViewer.src = firstPdf;
+            downloadBtn.href = firstPdf;
+            downloadBtn.download = pdfItems[0].file;
+        }
+
+        fullscreenBtn.addEventListener('click', () => {
+            if (pdfViewer.requestFullscreen) {
+                pdfViewer.requestFullscreen();
+            } else if (pdfViewer.mozRequestFullScreen) { 
+                pdfViewer.mozRequestFullScreen();
+            } else if (pdfViewer.webkitRequestFullscreen) { 
+                pdfViewer.webkitRequestFullscreen();
+            } else if (pdfViewer.msRequestFullscreen) { 
+                pdfViewer.msRequestFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
